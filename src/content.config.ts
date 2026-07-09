@@ -5,8 +5,7 @@ import { rssSchema } from "@astrojs/rss";
 
 const blog = defineCollection({
   loader: glob({ base: "./src/contents/blogs", pattern: "**/*.{md,mdx}" }),
-  schema: z.object({
-    ...rssSchema.shape,
+  schema: rssSchema.extend({
     rAuthor: reference("authors"),
     rRelatedBlogs: z.array(reference("blog")).optional(),
   }),
