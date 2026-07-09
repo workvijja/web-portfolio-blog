@@ -1,0 +1,11 @@
+---
+// check for prod url, fallback to current url
+const astroSite = Astro.site || Astro.url;
+---
+
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title="Vijja's Blog"
+  href={new URL("rss.xml", astroSite)}
+/>
