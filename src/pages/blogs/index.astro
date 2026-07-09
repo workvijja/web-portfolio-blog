@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+const blogs = await getCollection("blog");
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Blogs</title>
+  </head>
+  <body>
+    <h1>blogs</h1>
+    <ul>
+      {
+        blogs.map((b) => (
+          <li>
+            <a href={`/blogs/${b.id}`}>{b.data.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </body>
+</html>
