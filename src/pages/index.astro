@@ -1,14 +1,55 @@
 ---
-import { Button } from "@/components/ui/button";
 import MainLayout from "@/layouts/MainLayout.astro";
+import { SEO } from "astro-seo";
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site || Astro.url).href;
+const ogImageUrl = new URL("/og-banner.webp", Astro.site || Astro.url).href;
+
+const pageTitle =
+  "Vijjasena | Frontend Developer | React/Next, Vue/Nuxt, Angular, Astro";
+const siteDescription =
+  "Frontend focused Fullstack developer specializing in building high-performance web applications with React, Next.js, and clean UI architecture. Explore my site.";
 ---
 
 <MainLayout>
   <Fragment slot={"head"}>
-    <title>Vijja's Portfolio</title>
+    <SEO
+      title={pageTitle}
+      description={siteDescription}
+      canonical={canonicalUrl}
+      charset="UTF-8"
+      openGraph={{
+        basic: {
+          title: "Hire me please. i code",
+          type: "website",
+          image: ogImageUrl,
+          url: canonicalUrl,
+        },
+        optional: {
+          description: siteDescription,
+          siteName: "Vijja's Site",
+        },
+        image: {
+          alt: "A preview card for my professional frontend engineering portfolio showing featured projects and technical skillsets.",
+          width: 1200,
+          height: 630,
+          type: "image/webp",
+        },
+      }}
+      twitter={{
+        card: "summary_large_image",
+        title: "I can code. hire me please",
+        description: siteDescription,
+        image: ogImageUrl,
+        imageAlt:
+          "A preview card for my professional frontend engineering portfolio showing featured projects and technical skillsets.",
+      }}
+    />
   </Fragment>
-  <h1>Astro</h1>
-  <a href="/blogs">
-    <Button>blogs</Button>
-  </a>
+
+  <main class="flex flex-col flex-1 items-center justify-center">
+    <h1 class="font-heading font-semibold text-7xl italic mb-4">Frontend Developer</h1>
+    <p class="text-sm mb-1">Please hire me</p>
+    <p class="text-xs text-muted-foreground">Website still in progress</p>
+  </main>
 </MainLayout>
