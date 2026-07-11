@@ -1,11 +1,14 @@
 ---
 import { Button } from "@/components/ui/button";
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import MainLayout from "@/layouts/MainLayout.astro";
 ---
 
-<BaseLayout>
+<MainLayout>
+  <Fragment slot={"head"}>
+    <title>Vijja's Portfolio</title>
+  </Fragment>
   <h1>Astro</h1>
   <a href="/blogs">
     <Button>blogs</Button>
   </a>
-</BaseLayout>
+</MainLayout>

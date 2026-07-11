@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import MainLayout from "@/layouts/MainLayout.astro";
 import "@/styles/global.css";
 import type { GetStaticPaths } from "astro";
 import { getEntry } from "astro:content";
@@ -20,7 +20,7 @@ const author = await getEntry(
 const { Content } = await render(blog);
 ---
 
-<BaseLayout>
+<MainLayout>
   <Fragment slot="head">
     <title>Blogs - {blog.data.title}</title>
   </Fragment>
@@ -31,4 +31,4 @@ const { Content } = await render(blog);
     <span>{blog.data.pubDate}</span>
   </h5>
   <Content />
-</BaseLayout>
+</MainLayout>

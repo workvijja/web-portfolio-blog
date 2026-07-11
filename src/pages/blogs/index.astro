@@ -1,14 +1,14 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import MainLayout from "@/layouts/MainLayout.astro";
 import { getCollection } from "astro:content";
 const blogs = await getCollection("blog");
 ---
 
-<BaseLayout>
+<MainLayout>
   <Fragment slot="head">
     <title>Blogs</title>
   </Fragment>
-  
+
   <h1>blogs</h1>
   <ul>
     {
@@ -19,4 +19,4 @@ const blogs = await getCollection("blog");
       ))
     }
   </ul>
-</BaseLayout>
+</MainLayout>

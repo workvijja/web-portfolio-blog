@@ -1,0 +1,26 @@
+---
+export interface FooterLinksSection {
+  label: string;
+  links: { url: string; label: string }[];
+}
+interface Props {
+  sections: FooterLinksSection[];
+}
+
+const { sections } = Astro.props;
+---
+
+{
+  sections.map((section) => (
+    <div>
+      <h3 class="mb-4 text-sm font-semibold tracking-tight">{section.label}</h3>
+      <ul class="space-y-4 text-sm text-muted-foreground">
+        {section.links.map((link) => (
+          <li class="font-medium hover:text-primary">
+            <a href={link.url}>{link.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))
+}
