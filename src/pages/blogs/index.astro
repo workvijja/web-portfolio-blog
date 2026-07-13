@@ -1,22 +1,114 @@
 ---
+import MainSEO from "@/components/head/MainSEO.astro";
+import { Badge } from "@/components/ui/badge";
 import MainLayout from "@/layouts/MainLayout.astro";
 import { getCollection } from "astro:content";
+import { CalendarIcon, UserIcon } from "lucide-react";
+
 const blogs = await getCollection("blog");
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site || Astro.url).href;
+const ogImageUrl = new URL("/og-banner.webp", Astro.site || Astro.url).href;
+const webTitle = "Engineering Log: Lessons, Experiments & New Tech";
+const seoDescription =
+  "A frontend developer's journey building in public. Documenting things I learn, technical deep dives, and experiments with modern web architecture.";
 ---
 
 <MainLayout>
   <Fragment slot="head">
-    <title>Blogs</title>
+    <MainSEO
+      title={webTitle}
+      titleTemplate="%s | Vijjasena"
+      description={seoDescription}
+      canonical={canonicalUrl}
+      charset="UTF-8"
+      openGraph={{
+        basic: {
+          title: "Building in Public: My Engineering Log & Insights",
+          type: "website",
+          image: ogImageUrl,
+          url: canonicalUrl,
+        },
+        optional: {
+          description:
+            "Documenting my software journey—experiments with new frameworks, things I break, and insights I pick up along the way.",
+          siteName: "Vijja's Dev Log",
+        },
+        image: {
+          alt: "A graphic displaying an open code editor and terminal, representing a developer's continuous learning log.",
+          width: 1200,
+          height: 630,
+          type: "image/jpeg",
+        },
+      }}
+      twitter={{
+        card: "summary_large_image",
+        title: "Building in Public: My Engineering Log & Insights",
+        description:
+          "Documenting my software journey—experiments with new frameworks, things I break, and insights I pick up along the way.",
+        image: ogImageUrl,
+        imageAlt:
+          "A graphic displaying an open code editor and terminal, representing a developer's continuous learning log.",
+      }}
+    />
   </Fragment>
 
-  <h1>blogs</h1>
-  <ul>
-    {
-      blogs.map((b) => (
-        <li>
-          <a href={`/blogs/${b.id}`}>{b.data.title}</a>
-        </li>
-      ))
-    }
-  </ul>
+  <div class="px-6 py-4 md:px-8 md:py-6 flex-1">
+    <div class="container flex w-full gap-6">
+      <main class="flex-1">
+        <hgroup class="mb-8">
+          <!-- TODO: UPDATE COPYWRITING -->
+          <h1 class="mb-4 text-6xl font-heading italic font-semibold">Blogs</h1>
+          <p class="text-sm text-muted-foreground">Read through my blogs</p>
+        </hgroup>
+        <section>
+          <ul class="space-y-4 md:-ml-6">
+            {
+              blogs.map((b) => (
+                <li>
+                  <a href={`/blogs/${b.id}`}>
+                  {/* TODO: UPDATE CARD TO BE MORE STYLISH */}
+                    <article class="flex flex-col gap-2 px-4 py-3 md:px-6 md:py-4 border border-border rounded-lg bg-white">
+                      <h3 class="font-heading font-semibold text-2xl">
+                        {b.data.title}
+                      </h3>
+                      <p class="text-sm">{b.data.description}</p>
+                      {b.data.categories && (
+                        <ul class="flex items-center gap-2 md:-ml-2">
+                          {b.data.categories.map((c) => (
+                            <li>
+                              <Badge>{c}</Badge>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <dl class="flex items-center gap-3">
+                        <span class="flex items-center gap-1">
+                          <dt>
+                            <UserIcon className="size-4 text-muted-foreground" />
+                            <span class="sr-only">Author</span>
+                          </dt>
+                          <dd class="font-heading font-semibold italic text-base">{b.data.author}</dd>
+                        </span>
+                        <span class="size-1 rounded-full bg-muted-foreground"/>
+                        <span class="flex items-center gap-1">
+                          <dt>
+                            <CalendarIcon className="size-4 text-muted-foreground" />
+                            <span class="sr-only">Publish Date</span>
+                          </dt>
+                          <dd class="font-heading font-semibold italic text-base">{b.data.pubDate?.toLocaleDateString()}</dd>
+                        </span>
+                      </dl>
+                    </article>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </main>
+      <!-- TODO: SORT, SEARCH, FILTER LATER -->
+      <!-- <aside class="bg-red-200 shrink-0 min-w-75 max-w-100 h-[20vh]"></aside> -->
+    </div>
+  </div>
 </MainLayout>

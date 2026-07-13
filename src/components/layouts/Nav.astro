@@ -7,16 +7,16 @@ interface Props extends HTMLAttributes<"nav"> {}
 const { class: className, ...props } = Astro.props;
 ---
 
-<nav {...props} class:list={["bg-background max-w-1/3 w-fit h-12 rounded-full shadow-lg", className]}>
-  <ul class="flex items-center h-full px-6 py-4 gap-4">
+<nav {...props} class:list={["bg-background md:max-w-1/3 w-fit h-10 md:h-12 rounded-full shadow-lg", className]}>
+  <ul class="flex items-center h-full px-4 py-2 gap-2 md:px-6 md:py-4 md:gap-4">
     <li>
       <a href="/">
-        <Button variant={"link"}> Home </Button>
+        <Button variant={"link"} size={"sm"}> Home </Button>
       </a>
     </li>
     <li>
       <a href="/blogs">
-        <Button variant={"link"}> Blogs </Button>
+        <Button variant={"link"} size={"sm"}> Blogs </Button>
       </a>
     </li>
   </ul>
