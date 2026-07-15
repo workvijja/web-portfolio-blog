@@ -1,10 +1,13 @@
 ---
+import BlogSectionsNav from "@/components/blogs/BlogSectionsNav.astro";
+import ScrollProgress from "@/components/blogs/ScrollProgress.astro";
+import MainSEO from "@/components/head/MainSEO.astro";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import MainLayout from "@/layouts/MainLayout.astro";
-import "@/styles/global.css";
 import type { GetStaticPaths } from "astro";
-import { getEntry } from "astro:content";
-import { render } from "astro:content";
-import { getCollection } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
+import { CalendarIcon, UserIcon } from "lucide-react";
 
 // Build on runtime
 export const getStaticPaths = (async () => {
@@ -17,18 +20,152 @@ const author = await getEntry(
   blog.data.rAuthor.collection,
   blog.data.rAuthor.id,
 );
-const { Content } = await render(blog);
+
+const title = blog.data.title || "";
+const description = blog.data.description;
+const tags = blog.data.categories || [];
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site || Astro.url).href;
+// TODO: CREATE OG IMAGE GENERATOR FOR BLOG
+const ogImageUrl = new URL("/og-banner.webp", Astro.site || Astro.url).href;
+const isoPublishDate = blog.data.pubDate?.toISOString();
+const authorName = author?.data.name || blog.data.author || "";
+
+const { Content, headings } = await render(blog);
+const sections = headings.filter((h) => h.depth === 2);
 ---
 
 <MainLayout>
   <Fragment slot="head">
-    <title>Blogs - {blog.data.title}</title>
+    <MainSEO
+      title={title}
+      titleTemplate="%s | Vijja's Dev Log"
+      description={description}
+      canonical={canonicalUrl}
+      charset="UTF-8"
+      openGraph={{
+        basic: {
+          title: title,
+          type: "article", // Changes from 'website' to tell platforms this is a reading piece
+          image: ogImageUrl,
+          url: canonicalUrl,
+        },
+        optional: {
+          description: description,
+          siteName: "Vijja's Engineering Log",
+        },
+        image: {
+          alt: `Featured graphic card for the article titled: "${title}"`,
+          width: 1200,
+          height: 630,
+          type: "image/jpeg",
+        },
+        // Article-specific parameters to show off timestamps and tech categories
+        article: {
+          publishedTime: isoPublishDate,
+          tags: tags, // Array of strings e.g., ['React', 'Next.js', 'Astro']
+          authors: [authorName],
+        },
+      }}
+      twitter={{
+        card: "summary_large_image",
+        title: title,
+        description: description,
+        image: ogImageUrl,
+        imageAlt: `Featured graphic card for the article titled: "${title}"`,
+      }}
+    />
   </Fragment>
-  <h1>{blog.data.title}</h1>
-  <h5>
-    <span>{author?.data.name}</span>
-    -
-    <span>{blog.data.pubDate}</span>
-  </h5>
-  <Content />
+  <ScrollProgress class={"fixed top-0 left-0 w-full z-10"} />
+  <div class="px-6 py-4 md:px-8 md:py-6 flex-1">
+    <div class="container">
+      <hgroup class="mb-8">
+        <h1
+          class="mb-4 text-pretty text-4xl sm:text-5xl md:text-6xl font-heading italic font-semibold"
+        >
+          {title}
+        </h1>
+        {
+          tags.length && (
+            <ul class="flex items-center gap-2 md:-ml-2">
+              {tags.map((c) => (
+                <li>
+                  <Badge>{c}</Badge>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        <dl class="mt-2 flex items-center gap-3">
+          <span class="flex items-center gap-1">
+            <dt>
+              <UserIcon className="size-4 text-muted-foreground" />
+              <span class="sr-only">Author</span>
+            </dt>
+            <dd class="font-heading font-semibold italic text-base">
+              {authorName}
+            </dd>
+          </span>
+          <span class="size-1 rounded-full bg-muted-foreground"></span>
+          <span class="flex items-center gap-1">
+            <dt>
+              <CalendarIcon className="size-4 text-muted-foreground" />
+              <span class="sr-only">Publish Date</span>
+            </dt>
+            <dd class="font-heading font-semibold italic text-base">
+              {blog.data.pubDate?.toLocaleDateString()}
+            </dd>
+          </span>
+        </dl>
+      </hgroup>
+      <div class="relative flex flex-wrap md:flex-row-reverse gap-6">
+        {
+          sections.length && (
+            <aside class="basis-full md:basis-1/4 lg:basis-75 shrink-0 h-fit md:sticky md:top-21">
+              <h4 class="mb-2 md:mb-4 font-heading font-semibold text-2xl italic">
+                Sections
+              </h4>
+              <BlogSectionsNav class={"w-full"} sections={sections} />
+            </aside>
+          )
+        }
+        <main class="flex-1 overflow-hidden">
+          <section
+            class="prose prose-sm md:prose-lg max-w-none lg:max-w-5xl prose-headings:font-heading prose-h2:scroll-mt-25"
+          >
+            <Content />
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
 </MainLayout>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const headings = document.querySelectorAll("section > h2");
+    const links = document.querySelectorAll("aside > ul > li > a");
+
+    const initActiveSection = (id: string) => {
+      links.forEach((l) => ((l as HTMLElement).dataset.state = "inactive"));
+      const activeLink = document.querySelector(`a[href="${id}"]`);
+      (activeLink as HTMLElement).dataset.state = "active";
+    };
+
+    const options = {
+      root: null,
+      rootMargin: "30% 0px -40% 0px",
+      scrollMargin: "0px",
+      threshold: 1.0,
+    };
+    const callback: IntersectionObserverCallback = (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          initActiveSection("#" + (e.target as HTMLElement).id);
+        }
+      });
+    };
+    const observer = new IntersectionObserver(callback, options);
+    headings.forEach((h) => observer.observe(h));
+  });
+</script>

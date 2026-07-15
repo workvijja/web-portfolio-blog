@@ -1,0 +1,29 @@
+---
+import type { MarkdownHeading } from "astro";
+import type { HTMLAttributes } from "astro/types";
+import { Button } from "../ui/button";
+
+interface Props extends HTMLAttributes<"ul"> {
+  sections: MarkdownHeading[];
+}
+
+const { sections, class: className, ...props } = Astro.props;
+---
+
+<ul {...props} class:list={["md:space-y-2 -ml-2", className]}>
+  {
+    sections.map((s) => (
+      <li>
+        <a href={`#${s.slug}`} class="data-[state=active]:*:text-primary">
+          <Button
+            variant={"link"}
+            className={"text-muted-foreground hover:text-primary text-wrap text-left"}
+          >
+            {s.text}
+          </Button>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
