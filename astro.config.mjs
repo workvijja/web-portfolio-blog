@@ -7,9 +7,17 @@ import sitemap from '@astrojs/sitemap';
 
 import tailwindcss from '@tailwindcss/vite';
 
+const sitemapConfig = sitemap({
+  chunks: {
+    blogs: (item) => {
+      if (/\/blogs\/.+/.test(item.url)) return item
+    }
+  }
+})
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), sitemap()],
+  integrations: [react(), sitemapConfig],
 
   vite: {
     plugins: [tailwindcss()]

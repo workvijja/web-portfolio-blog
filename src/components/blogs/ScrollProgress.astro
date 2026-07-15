@@ -1,0 +1,32 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {}
+
+const { class: className, ...props } = Astro.props;
+---
+
+<div id="scroll-progress" {...props} class:list={["bg-primary w-full h-1", className]}/>
+
+
+<style>
+#scroll-progress {
+  display: hidden;
+}
+
+@keyframes grow-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  #scroll-progress {
+    display: block;
+    transform: scaleX(0);
+    animation: grow-progress auto linear;
+    animation-timeline: scroll(root);
+    transform-origin: left;
+  }
+}
+</style>

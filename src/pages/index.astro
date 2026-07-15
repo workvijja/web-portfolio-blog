@@ -1,23 +1,13 @@
 ---
-import "@/styles/global.css";
-import { Button } from "@/components/ui/button";
-import RssLink from "@/components/head/rss/RssLink.astro";
+import MainLayout from "@/layouts/MainLayout.astro";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <RssLink />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
-  </head>
-  <body>
-    <h1>Astro</h1>
-    <a href="/blogs">
-      <Button>blogs</Button>
-    </a>
-  </body>
-</html>
+<MainLayout>
+  <main class="flex flex-col flex-1 items-center justify-center text-center">
+    <h1 class="font-heading font-semibold text-7xl italic mb-4">
+      Frontend Developer
+    </h1>
+    <p class="text-sm mb-1">Please hire me</p>
+    <p class="text-xs text-muted-foreground">Website still in progress</p>
+  </main>
+</MainLayout>

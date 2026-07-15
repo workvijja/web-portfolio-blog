@@ -15,7 +15,13 @@ const authors = defineCollection({
   loader: glob({ pattern: "**/*.json", base: "./src/data/authors" }),
   schema: z.object({
     name: z.string(),
-    // portfolio: z.url(),
+    contacts: z.object({
+      email: z.email(),
+    }),
+    socials: z.object({
+      LinkedIn: z.url(),
+      Github: z.url(),
+    }),
   }),
 });
 

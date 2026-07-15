@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/public-sans";
 @import "@fontsource-variable/eb-garamond";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -126,6 +127,13 @@
     @apply bg-background text-foreground;
     }
   html {
-    @apply font-sans;
+    @apply font-sans scroll-smooth;
     }
+}
+
+@utility container-* {
+  width: 100%;
+  margin-inline: auto;
+  max-width: calc(var(--spacing) * --value(integer));
+  max-width: --value([length], --default(80rem));
 }
